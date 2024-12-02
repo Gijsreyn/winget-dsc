@@ -1,10 +1,6 @@
 using module Microsoft.Windows.Setting.Language
 
-<<<<<<< HEAD
 $ErrorActionPreference = 'Stop'
-=======
-$ErrorActionPreference = 'Stop'
->>>>>>> 1bca14b9949ec207fa780c4428ae509133367cad
 Set-StrictMode -Version Latest
 
 <#
