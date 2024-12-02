@@ -1,6 +1,10 @@
 using module Microsoft.Windows.Setting.Language
 
-$ErrorActionPreference = "Stop"
+<<<<<<< HEAD
+$ErrorActionPreference = 'Stop'
+=======
+$ErrorActionPreference = 'Stop'
+>>>>>>> 1bca14b9949ec207fa780c4428ae509133367cad
 Set-StrictMode -Version Latest
 
 <#
@@ -14,7 +18,7 @@ BeforeAll {
 
 Describe 'List available DSC resources' {
     It 'Shows DSC Resources' {
-        $expectedDSCResources = @("Language", "DisplayLanguage")
+        $expectedDSCResources = @('Language', 'DisplayLanguage')
         $availableDSCResources = (Get-DscResource -Module Microsoft.Windows.Setting.Language).Name
         $availableDSCResources.count | Should -Be 2
         $availableDSCResources | Where-Object { $expectedDSCResources -notcontains $_ } | Should -BeNullOrEmpty -ErrorAction Stop
@@ -26,9 +30,9 @@ Describe 'Language' {
         $desiredState = @{
             LocaleName = 'en-GB'
         }
-        
+
         Invoke-DscResource -Name Language -ModuleName Microsoft.Windows.Setting.Language -Method Set -Property $desiredState
-     
+
         $finalState = Invoke-DscResource -Name Language -ModuleName Microsoft.Windows.Setting.Language -Method Get -Property $desiredState
         $finalState.Exist | Should -BeTrue
     }
@@ -37,15 +41,21 @@ Describe 'Language' {
         $desiredState = @{
             LocaleName = 'en-GB'
         }
-        
+
+        <<<<<<< HEAD
         Invoke-DscResource -Name Pip3Package -ModuleName PythonPip3Dsc -Method Set -Property $desiredState
-     
+
         $finalState = Invoke-DscResource -Name Pip3Package -ModuleName PythonPip3Dsc -Method Get -Property $desiredState
+        =======
+        Invoke-DscResource -Name Language -ModuleName Microsoft.Windows.Setting.Language -Method Set -Property $desiredState
+
+        $finalState = Invoke-DscResource -Name Language -ModuleName Microsoft.Windows.Setting.Language -Method Get -Property $desiredState
+        >>>>>>> 1bca14b9949ec207fa780c4428ae509133367cad
         $finalState.Exist | Should -BeFalse
     }
 
-    It 'Export all languages' -Skip:(!$IsWindows) { 
-     
+    It 'Export all languages' -Skip:(!$IsWindows) {
+
         $class = [Language]::new()
 
         $currentLanguages = $class::Export()
@@ -61,9 +71,9 @@ Describe 'DisplayLanguage' {
         $desiredState = @{
             LocaleName = 'en-US'
         }
-        
+
         Invoke-DscResource -Name DisplayLanguage -ModuleName Microsoft.Windows.Setting.Language -Method Set -Property $desiredState
-     
+
         $finalState = Invoke-DscResource -Name Language -ModuleName Microsoft.Windows.Setting.Language -Method Get -Property $desiredState
         $finalState.Exist | Should -BeTrue
     }

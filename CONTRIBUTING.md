@@ -8,7 +8,9 @@ The Windows Package Manager team is active in this GitHub Repository. In fact, w
 
 When the team finds issues we file them in the repository. When we propose new ideas or think-up new features, we file new feature requests. When we work on fixes or features, we create branches and work on those improvements. And when PRs are reviewed, we review in public - including all the good, the bad, and the ugly parts.
 
-The point of doing all this work in public is to ensure that we are holding ourselves to a high degree of transparency, and so that the community sees that we apply the same processes and hold ourselves to the same quality-bar as we do to community-submitted issues and PRs. We also want to make sure that we expose our team culture and "tribal knowledge" that is inherent in any closely-knit team, which often contains considerable value to those new to the project who are trying to figure out "why the heck does this thing look/work like this???"
+The point of doing all this work in public is to ensure that we are holding ourselves to a high degree of transparency, and so that the community sees that we apply the same processes and hold ourselves to the same quality-bar as we do to community-submitted issues and PRs.
+
+We also want to make sure that we expose our team culture and "tribal knowledge" that is inherent in any closely-knit team, which often contains considerable value to those new to the project who are trying to figure out "why the heck does this thing look/work like this???"
 
 ### Repository Bot
 
@@ -21,6 +23,7 @@ We drive the bot by tagging issues with specific labels which cause the bot engi
 Therefore, if you do file issues, or create PRs, please keep an eye on your GitHub notifications. If you do not respond to requests for information, your issues/PRs may be closed automatically.
 
 ---
+
 ## Reporting Security Issues
 
 **Please do not report security vulnerabilities through public GitHub issues.** Instead, please report them to the Microsoft Security Response Center (MSRC). See [SECURITY.md](./SECURITY.md) for more information.
@@ -115,6 +118,7 @@ If you're feature (or module) has not yet been created, follow these steps:
 
 1. Fork the repository if you haven't already.
 2. Clone your fork locally.
+<<<<<<< HEAD
 3. Dot-source the `New-DscResourceModule.ps` in your PowerShell session.
 4. Create a new module scaffolding by executing: `New-DscResourceModule -DscResourceModule '<moduleName>' -Description 'DSC Resource for <description>'`
 5. Work on your changes and write tests.
@@ -122,6 +126,14 @@ If you're feature (or module) has not yet been created, follow these steps:
 7. Create & push a feature branch.
 8. Create a [Draft Pull Request (PR)](https://github.blog/2019-02-14-introducing-draft-pull-requests/).
 9. If you are finished with your changes and you want a review, change the state.
+=======
+3. Open a PowerShell terminal session and execute: `.\utilities\tools\New-DscResourceModule.ps1 -DscResourceModule '<moduleName>' -Description 'DSC Resource for <description>'`
+4. Work on your changes and write tests.
+5. Build and test to see if it works.
+6. Create & push a feature branch.
+7. Create a [Draft Pull Request (PR)](https://github.blog/2019-02-14-introducing-draft-pull-requests/).
+8. If you are finished with your changes and you want a review, change the state.
+>>>>>>> 1bca14b9949ec207fa780c4428ae509133367cad
 
 > [!TIP]
 > Don't forget to add the `DscResourcesToExport` and `Tags`.

@@ -19,10 +19,17 @@ The `Language` DSC Resource allows you to install, update, and uninstall languag
 
 ## PARAMETERS
 
+<<<<<<< HEAD
 | **Parameter** | **Attribute** | **DataType** | **Description**                                                                                                                           | **Allowed Values**                                                                    |
 | ------------- | ------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | `LocaleName`  | Mandatory     | String       | The name of the language. This is the language tag that represents the language. For example, `en-US` represents English (United States). | Use the `Get-LocaleList` function or Export() method to get a list of allowed values. |
 | `Exist`       | Optional      | Boolean      | Indicates whether the language should exist. The default value is `$true`.                                                               | `$true`, `$false`                                                                     |
+=======
+| **Parameter** | **Attribute** | **DataType** |                                                              **Description**                                                              |                                  **Allowed Values**                                   |
+| ------------- | ------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `LocaleName`  | Mandatory     | String       | The name of the language. This is the language tag that represents the language. For example, `en-US` represents English (United States). | Use the `Get-LocaleList` function or Export() method to get a list of allowed values. |
+| `Exist`       | Optional      | Boolean      | Indicates whether the language should exist. The default value is `$true`.                                                                | `$true`, `$false`                                                                     |
+>>>>>>> 1bca14b9949ec207fa780c4428ae509133367cad
 
 ## EXAMPLES
 

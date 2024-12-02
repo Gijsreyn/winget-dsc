@@ -69,6 +69,7 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
+<<<<<<< HEAD
     FunctionsToExport    = '*'
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
@@ -82,6 +83,21 @@
 
     # DSC resources to export from this module
     DscResourcesToExport = @("Language", "DisplayLanguage")
+=======
+    # FunctionsToExport    = '*'
+
+    # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
+    # CmdletsToExport      = '*'
+
+    # Variables to export from this module
+    # VariablesToExport    = '*'
+
+    # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
+    # AliasesToExport      = '*'
+
+    # DSC resources to export from this module
+    DscResourcesToExport = @('Language', 'DisplayLanguage')
+>>>>>>> 1bca14b9949ec207fa780c4428ae509133367cad
 
     # List of all modules packaged with this module
     # ModuleList = @()

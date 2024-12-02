@@ -3,6 +3,7 @@
 
 using namespace System.Collections.Generic
 
+<<<<<<< HEAD
 $global:LocaleNameRegistryPath = 'HKCU:\Control Panel\International'
 $global:LocaleUserProfilePath = 'HKCU:\Control Panel\International\User Profile'
 
@@ -10,6 +11,16 @@ $global:LocaleUserProfilePath = 'HKCU:\Control Panel\International\User Profile'
 function Get-OsBuildVersion {
     return [System.Environment]::OSVersion.Version.Build
 }
+=======
+if ([string]::IsNullOrEmpty($env:TestRegistryPath)) {
+    $global:LocaleNameRegistryPath = 'HKCU:\Control Panel\International'
+    $global:LocaleUserProfilePath = 'HKCU:\Control Panel\International\User Profile'
+} else {
+    $global:LocaleNameRegistryPath = $global:LocaleUserProfilePath = $env:TestRegistryPath
+}
+
+#region Functions
+>>>>>>> 1bca14b9949ec207fa780c4428ae509133367cad
 
 function TryGetRegistryValue {
     param (
@@ -42,8 +53,13 @@ function Get-LocaleList {
 
     # section to include other languages that can be installed
     # helpful for users to discover what packages can be installed
+<<<<<<< HEAD
     $allLangues = [System.Globalization.CultureInfo]::GetCultures('AllCultures')
     foreach ($culture in $allLangues) {
+=======
+    $allLanguages = [System.Globalization.CultureInfo]::GetCultures('AllCultures')
+    foreach ($culture in $allLanguages) {
+>>>>>>> 1bca14b9949ec207fa780c4428ae509133367cad
         if ($out.LocaleName -notcontains $culture.Name -and -not ([string]::IsNullOrEmpty($culture.Name))) {
             $language = [Language]::new($culture.Name, $false)
             $out.Add($language)

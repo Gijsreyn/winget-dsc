@@ -108,26 +108,50 @@ Describe 'Pip3Package' {
         $whatIfState = @{
             PackageName = 'itsdangerous'
             Version     = '2.2.0'
+<<<<<<< HEAD
         }
 
         $pipPackage = [Pip3Package]$whatIfState
         $whatIf = $pipPackage.WhatIf() | ConvertFrom-Json
         
 
+=======
+            Exist       = $false
+        }
+
+        $pipPackage = [Pip3Package]$whatIfState
+
+        # Uninstall to make sure it is not present
+        $pipPackage.Set()
+
+        $pipPackage.Exist = $true
+
+        # Call whatif to see if it "will" install
+        $whatIf = $pipPackage.WhatIf() | ConvertFrom-Json
+        
+>>>>>>> 1bca14b9949ec207fa780c4428ae509133367cad
         $whatIf.PackageName | Should -Be 'itsdangerous'
         $whatIf._metaData.whatIf | Should -Contain "Would install itsdangerous-$($whatIfState.Version)"
     }
 
     It 'Does not return whatif result if package is invalid' -Skip:(!$IsWindows) {
         $whatIfState = @{
+<<<<<<< HEAD
             PackageName = 'itsdangerouss'
+=======
+            PackageName = 'invalidPackageName'
+>>>>>>> 1bca14b9949ec207fa780c4428ae509133367cad
         }
 
         $pipPackage = [Pip3Package]$whatIfState
         $whatIf = $pipPackage.WhatIf() | ConvertFrom-Json
         
 
+<<<<<<< HEAD
         $whatIf.PackageName | Should -Be 'itsdangerouss'
+=======
+        $whatIf.PackageName | Should -Be 'invalidPackageName'
+>>>>>>> 1bca14b9949ec207fa780c4428ae509133367cad
         $whatIf._metaData.whatIf | Should -Contain "ERROR: No matching distribution found for $($whatIfState.PackageName)"
     }
 }
