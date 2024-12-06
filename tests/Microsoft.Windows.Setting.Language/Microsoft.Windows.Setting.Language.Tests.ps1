@@ -38,15 +38,8 @@ Describe 'Language' {
             LocaleName = 'en-GB'
         }
 
-        <<<<<<< HEAD
-        Invoke-DscResource -Name Pip3Package -ModuleName PythonPip3Dsc -Method Set -Property $desiredState
-
-        $finalState = Invoke-DscResource -Name Pip3Package -ModuleName PythonPip3Dsc -Method Get -Property $desiredState
-        =======
         Invoke-DscResource -Name Language -ModuleName Microsoft.Windows.Setting.Language -Method Set -Property $desiredState
-
         $finalState = Invoke-DscResource -Name Language -ModuleName Microsoft.Windows.Setting.Language -Method Get -Property $desiredState
-        >>>>>>> 1bca14b9949ec207fa780c4428ae509133367cad
         $finalState.Exist | Should -BeFalse
     }
 
