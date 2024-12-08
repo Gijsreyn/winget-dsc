@@ -32,23 +32,52 @@ function TryGetRegistryValue {
     }
 }
 
-function Get-LocaleList {
-    $localeList = Get-WinUserLanguageList
-    $out = [List[Language]]::new()
+function Test-LanguagePackAvailability {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$Language
+    )
 
-    foreach ($locale in $localeList) {
-        $language = [Language]::new($locale.LanguageTag, $true)
-        $out.Add($language)
+    # Do not rely on Get-WindowsCapability as it requires elevation + it can take time to run
+    $languagePacks = Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object -ExpandProperty MUILanguages
+
+    if ($null -eq $languagePacks) {
+        return $false
     }
 
-    # section to include other languages that can be installed
-    # helpful for users to discover what packages can be installed
-    $allLanguages = [System.Globalization.CultureInfo]::GetCultures('AllCultures')
-    foreach ($culture in $allLanguages) {
-        if ($out.LocaleName -notcontains $culture.Name -and -not ([string]::IsNullOrEmpty($culture.Name))) {
-            $language = [Language]::new($culture.Name, $false)
-            $out.Add($language)
-        }
+    if ($languagePacks -notcontains $Language) {
+        return $false
+    }
+
+    return $true
+}
+
+function Test-UserLanguageList {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$Language
+    )
+
+    $localeList = Get-WinUserLanguageList
+
+    if ($null -eq $localeList) {
+        return $false
+    }
+
+    if ($localeList.LanguageTag -notcontains $Language) {
+        return $false
+    }
+
+    return $false
+}
+
+function Get-LanguageList {
+    $languageList = Get-Language
+    $out = [List[Language]]::new()
+
+    foreach ($language in $languageList) {
+        $language = [Language]::new($language.LanguageId, $true)
+        $out.Add($language)
     }
 
     return $out
@@ -75,32 +104,33 @@ function Get-LocaleList {
 [DscResource()]
 class Language {
     [DscProperty(Key)]
-    [string] $LocaleName
+    [string] $LanguageId
 
     [DscProperty()]
     [bool] $Exist = $true
 
-    static [hashtable] $InstalledLocality
+    static [hashtable] $InstalledLanguages
 
     Language() {
-        [Language]::GetInstalledLocality()
+        [Language]::GetInstalledLanguages()
     }
 
-    Language([string] $LocaleName, [bool] $Exist) {
-        $this.LocaleName = $LocaleName
+    Language([string] $LanguageId, [bool] $Exist) {
+        $this.LanguageId = $LanguageId
         $this.Exist = $Exist
     }
 
     [Language] Get() {
-        $keyExist = [Language]::InstalledLocality.ContainsKey(($this.LocaleName))
+        $currentState = [Language]::InstalledLanguages[$this.LanguageId]
 
-        $currentState = [Language]::InstalledLocality[$this.LocaleName]
-
-        if (-not $keyExist) {
-            return [Language]::new($this.LocaleName, $false)
+        if ($null -ne $currentState) {
+            return $currentState
         }
 
-        return $currentState
+        return @{
+            LanguageId = $this.LanguageId
+            Exist      = $false
+        }
     }
 
     [void] Set() {
@@ -110,9 +140,9 @@ class Language {
 
         if ($this.Exist) {
             # use the LanguagePackManagement module to install the language (requires elevation). International does not have a cmdlet to install language
-            Install-Language -Language $this.LocaleName
+            Install-Language -Language $this.LanguageId
         } else {
-            Uninstall-Language -Language $this.LocaleName
+            Uninstall-Language -Language $this.LanguageId
         }
     }
 
@@ -127,15 +157,15 @@ class Language {
     }
 
     static [Language[]] Export() {
-        return Get-LocaleList
+        return Get-LanguageList
     }
 
     #region Language helper functions
-    static [void] GetInstalledLocality() {
-        [Language]::InstalledLocality = @{}
+    static [void] GetInstalledLanguages() {
+        [Language]::InstalledLanguages = @{}
 
-        foreach ($locality in [Language]::Export()) {
-            [Language]::InstalledLocality[$locality.LocaleName] = $locality
+        foreach ($language in [Language]::Export()) {
+            [Language]::InstalledLanguages[$language.LanguageId] = $language
         }
     }
     #endRegion Language helper functions
@@ -187,8 +217,17 @@ class DisplayLanguage {
         if ($this.Test()) {
             return
         }
-        Set-WinSystemLocale -SystemLocale $this.LocaleName -Force
 
+        if (Test-LanguagePackAvailability -Language $this.LocaleName) {
+            if (-not (Test-UserLanguageList)) {
+                # The language is installed through different means
+                # To reflect the language in the immersive control panel, we need to add it to the user language list
+                $existingList = Get-WinUserLanguageList
+                $existingList.Add($this.LocaleName)
+                Set-WinUserLanguageList -LanguageList $existingList
+            }
+            Set-WinUILanguageOverride -Language $this.LocaleName -Force
+        }
     }
 
     [bool] Test() {
