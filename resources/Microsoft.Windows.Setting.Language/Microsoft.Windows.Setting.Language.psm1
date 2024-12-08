@@ -3,35 +3,6 @@
 
 using namespace System.Collections.Generic
 
-if ([string]::IsNullOrEmpty($env:TestRegistryPath)) {
-    $global:LocaleNameRegistryPath = 'HKCU:\Control Panel\International'
-    $global:LocaleUserProfilePath = 'HKCU:\Control Panel\International\User Profile'
-} else {
-    $global:LocaleNameRegistryPath = $global:LocaleUserProfilePath = $env:TestRegistryPath
-}
-
-#region Functions
-
-function TryGetRegistryValue {
-    param (
-        [Parameter(Mandatory = $true)]
-        [string]$Key,
-
-        [Parameter(Mandatory = $true)]
-        [string]$Property
-    )
-
-    if (Test-Path -Path $Key) {
-        try {
-            return (Get-ItemProperty -Path $Key | Select-Object -ExpandProperty $Property)
-        } catch {
-            Write-Verbose "Property `"$($Property)`" could not be found."
-        }
-    } else {
-        Write-Verbose 'Registry key does not exist.'
-    }
-}
-
 function Test-LanguagePackAvailability {
     param (
         [Parameter(Mandatory = $true)]
