@@ -6,7 +6,7 @@
       "kind": "resource",
       "version": "0.1.0",
       "type": "RustDsc/CargoToolInstall",
-      "author": "",
+      "author": "DscSamples",
       "description": "The `CargoToolInstall` DSC Resource allows you to manage the installation and removal of Rust crates using Cargo. This resource ensures that the specified Rust crate is in the desired state.",
       "capabilities": ["get", "test", "set", "export"],
       "schema": {
@@ -55,7 +55,7 @@
           "title": "RustDsc/CargoToolInstall"
         }
       },
-      "path": "RustDsc.psm1"
+      "path": "RustDsc.psd1"
     }
   ]
 }
