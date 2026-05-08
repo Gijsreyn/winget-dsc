@@ -477,7 +477,7 @@ class GitConfigUserEmail {
             Name             = 'core.autocrlf'
             Value            = 'input'
             ConfigLocation   = 'local'
-            ProjectDirectory = 'C:\repos\myproject'
+            ProjectDirectory = 'C:\repos\MyProject'
         }
 
         This example sets the local Git core.autocrlf configuration to 'input'.
