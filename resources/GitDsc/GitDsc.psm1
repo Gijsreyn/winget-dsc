@@ -511,6 +511,10 @@ class GitConfig {
     [GitConfig] Get() {
         Assert-Git
 
+        if ($this.Exist -and [string]::IsNullOrEmpty($this.Value)) {
+            throw 'Value must be specified when Exist is true.'
+        }
+
         $currentState = [GitConfig]::new()
         $currentState.Name = $this.Name
         $currentState.ConfigLocation = $this.ConfigLocation
@@ -558,9 +562,6 @@ class GitConfig {
         Invoke-GitWorkingDirectory -ConfigLocation $this.ConfigLocation -ProjectDirectory $this.ProjectDirectory
 
         if ($this.Exist) {
-            if ([string]::IsNullOrEmpty($this.Value)) {
-                throw 'Value must be specified when Exist is true.'
-            }
             $gitArgs = Get-GitConfigArguments -ConfigLocation $this.ConfigLocation -Tail @($this.Name, $this.Value)
         } else {
             $gitArgs = Get-GitConfigArguments -ConfigLocation $this.ConfigLocation -Tail @('--unset', $this.Name)
