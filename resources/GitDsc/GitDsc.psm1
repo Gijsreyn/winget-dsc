@@ -578,28 +578,32 @@ class GitConfig {
 
         Invoke-GitWorkingDirectory -ConfigLocation $ConfigLocation -ProjectDirectory $ProjectDirectory
 
-        $gitArgs = Get-GitConfigArguments -ConfigLocation $ConfigLocation -Tail @('--list')
-        $output = & git @gitArgs 2>&1
+        # Use --null (-z) so each entry is NUL-terminated and key/value are separated by a newline.
+        $gitArgs = Get-GitConfigArguments -ConfigLocation $ConfigLocation -Tail @('--list', '--null')
+        $rawLines = & git @gitArgs 2>&1
 
-        if ($LASTEXITCODE -ne 0 -or $null -eq $output) {
+        if ($LASTEXITCODE -ne 0 -or $null -eq $rawLines) {
             return @()
         }
 
+        $rawOutput = $rawLines -join "`n"
+        $entries = $rawOutput.Split([char]0, [System.StringSplitOptions]::RemoveEmptyEntries)
+
         $results = [System.Collections.Generic.List[GitConfig]]::new()
 
-        foreach ($line in $output) {
-            # git config --list outputs "key=value"; split only on the first '=' so values containing '=' are preserved
-            $separatorIndex = $line.IndexOf('=')
+        foreach ($entry in $entries) {
+            # Each entry is "key\nvalue"; split on the first newline only
+            $separatorIndex = $entry.IndexOf("`n")
             if ($separatorIndex -lt 0) { continue }
 
-            $entry = [GitConfig]::new()
-            $entry.Name = $line.Substring(0, $separatorIndex)
-            $entry.Value = $line.Substring($separatorIndex + 1)
-            $entry.ConfigLocation = $ConfigLocation
-            $entry.ProjectDirectory = $ProjectDirectory
-            $entry.Exist = $true
+            $gitEntry = [GitConfig]::new()
+            $gitEntry.Name = $entry.Substring(0, $separatorIndex)
+            $gitEntry.Value = $entry.Substring($separatorIndex + 1)
+            $gitEntry.ConfigLocation = $ConfigLocation
+            $gitEntry.ProjectDirectory = $ProjectDirectory
+            $gitEntry.Exist = $true
 
-            $results.Add($entry)
+            $results.Add($gitEntry)
         }
 
         return $results.ToArray()
