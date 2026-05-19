@@ -592,7 +592,7 @@ class GitConfig {
         $results = [System.Collections.Generic.List[GitConfig]]::new()
 
         foreach ($entry in $entries) {
-            # Each entry is "key\nvalue"; split on the first newline only
+            # Each entry is "key\newValue"; split on the first newline only
             $separatorIndex = $entry.IndexOf("`n")
             if ($separatorIndex -lt 0) { continue }
 
